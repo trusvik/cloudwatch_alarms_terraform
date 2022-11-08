@@ -52,7 +52,7 @@ THEREBEDRAGONS
 ```
 ## TODO 
 
-* Skriv en *provider.tf* i samme katalog som dashboard.tf - og kjør terraform plan / apply fra Cloud 9 miljøet ditt
+* Skriv en *provider.tf* i samme katalog som dashboard.tf - og kjør terraform init / plan / apply fra Cloud 9 miljøet ditt
 * Se gjerne på https://github.com/glennbechdevops/terraform-app-runner - for inspirasjon
 * Se at Det blir opprettet et Dashboard
 
