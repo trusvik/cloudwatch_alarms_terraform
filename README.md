@@ -229,6 +229,10 @@ resource "aws_sns_topic_subscription" "user_updates_sqs_target" {
 * Legg merke til hvordan en ```resource``` refererer til en annen i Terraform!
 * Terraform lager både en SNS Topic og en email subscription. 
 
+### TODO 
+
+Kan du bytte ut namespace-verdien med variabelen student_name? 
+
 ### Bekreft Epost
 
 For at SNS skal få lov til å sende deg epost, må du bekrefte epost-addressen din.
