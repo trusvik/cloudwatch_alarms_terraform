@@ -1,6 +1,6 @@
 # Metrics og Alarmer med Spring Boot og CloudWatch + Terraform
 
-I denne øvingen skal dere bli ennå bedre kjent med hvordan man instrumenterer en Spring Boot applikasjon med Metrics. 
+I denne øvingen skal dere bli ennå kjent med hvordan man instrumenterer en Spring Boot applikasjon med Metrics. 
 Første delen av øvingen er lik https://github.com/glennbechdevops/cloudwatch_alarms_terraform - se på det som 
 repetisjon :) 
 
