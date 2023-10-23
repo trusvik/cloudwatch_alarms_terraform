@@ -5,7 +5,7 @@ Første delen av øvingen er lik https://github.com/glennbechdevops/cloudwatch_a
 repetisjon :) 
 
 * Vi skal også se på hvordan vi kan visualisere Metrics i AWS CloudWatch, og hvordan vi kan bruke terraform til å lage et dashboard i tjenesten CloudWatch 
-* Vi få GitHub Actions til å kjøre terraform for oss 
+* Vi får GitHub Actions til å kjøre terraform for oss 
 * Vi skal se på CloudWatch alarmer    
 
 ## Vi skal gjøre denne øvingen fra Cloud 9 
@@ -54,7 +54,7 @@ THEREBEDRAGONS
 
 * Skriv en *provider.tf* i samme katalog som dashboard.tf - og kjør terraform init / plan / apply fra Cloud 9 miljøet ditt
 * Se gjerne på https://github.com/glennbechdevops/terraform-app-runner - for inspirasjon
-* Se at Det blir opprettet et Dashboard
+* Se at det blir opprettet et Dashboard
 
 ### Variabler i Terraform 
 
@@ -144,7 +144,7 @@ curl --location --request POST 'http://localhost:8080/account/2/transfer/3' \
 
 Det skal se omtrent slik ut 
 
-* Går til AWS UI, og tjenesten CloudWatch. Velg "Dashboards".
+* Gå til AWS UI, og tjenesten CloudWatch. Velg "Dashboards".
 * Søk på ditt eget studentnavn og åpne dashboardet du lagde
 * Se at du får målepunkter på grafen
 
@@ -152,7 +152,7 @@ Det skal se omtrent slik ut
 
 # Gauge for banken sin totale sum
 
-Under normale forhold kal denne summen være 0. Når penger går inn på en konto, skal de også gå ut av en annen!
+Under normale forhold skal denne summen være 0. Når penger går inn på en konto, skal de også gå ut av en annen!
 Banken må kunne bevise at summen hele tiden er 0, og vi vil derfor lage en metric for dette i koden
 
 Du skal nå lage en Micrometer ```Gauge``` som viser nettobeholdningen til banken. 
@@ -249,7 +249,7 @@ For at SNS skal få lov til å sende deg epost, må du bekrefte epost-addressen 
 
 ### Løs ut alarmen! 
 
-* Forsøk å endre en konto sin saldo uten å gjøre en overfløring, dette vil gi en balanse i banken sin totale saldo ulik 0!
+* Forsøk å endre en konto sin saldo uten å gjøre en overføring, dette vil gi en balanse i banken sin totale saldo ulik 0!
 
 For eksmpel ;
 ```sh
