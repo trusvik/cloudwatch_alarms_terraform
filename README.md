@@ -1,11 +1,9 @@
 # Metrics og Alarmer med Spring Boot og CloudWatch + Terraform
 
-I denne øvingen skal dere bli ennå kjent med hvordan man instrumenterer en Spring Boot applikasjon med Metrics. 
-Første delen av øvingen er lik https://github.com/glennbechdevops/cloudwatch_alarms_terraform - se på det som 
-repetisjon :) 
+I denne øvingen skal dere bli kjent med hvordan man instrumenterer en Spring Boot applikasjon med Metrics. 
 
-* Vi skal også se på hvordan vi kan visualisere Metrics i AWS CloudWatch, og hvordan vi kan bruke terraform til å lage et dashboard i tjenesten CloudWatch 
-* Vi får GitHub Actions til å kjøre terraform for oss 
+* Vi skal også se på hvordan vi kan visualisere Metrics i ved hjelp av dashboard med grafer og statistikk i tjenesten CloudWatch 
+* Vi skal naturligvis la GitHub Actions til å kjøre terraform for oss 
 * Vi skal se på CloudWatch alarmer    
 
 ## Vi skal gjøre denne øvingen fra Cloud 9 
@@ -14,7 +12,7 @@ Logg på Cloud 9 miljøet ditt som vanlig
 
 ## Bruk Terraform til å lage et CloudWatch DashBoard 
 
-* Lag en Fork av dette repoet til Cloud9 miljøet ditt.  Se i katalogen "infra" - her finner dere filen *dashboard.tf* som inneholder Terraformkode for et CloudWatch Dashboard.
+* Lag en Fork av dette repoet til Cloud9 miljøet ditt. Se i katalogen "infra" - her finner dere filen *dashboard.tf* som inneholder Terraformkode for et CloudWatch Dashboard.
 * Du trenger å lage en fork, i din egen GitHub Konto, fordi du skal lage egne repository secrets osv når du skal lage en GitHub Actions workflow senere. 
 * Git Clone  din *egen fork* inn i Cloud9 miljøet ditt
 * Som dere ser beskrives dashboardet i et JSON-format. Her finner dere dokumentasjon https://docs.aws.amazon.com/AmazonCloudWatch/latest/APIReference/CloudWatch-Dashboard-Body-Structure.html
@@ -279,9 +277,6 @@ Du trenger ikke lage en Pipeline for Java applikasjonen, kun for Terraform!
 ## Rydd opp etter deg plz
 
 Kjør ```Terraform destroy``` fra Cloud 9, eller lag en "cleanup.yml" workflow 
-
-
-
 
 
 ## Ekstrapppgaver
