@@ -106,15 +106,6 @@ public class BankAccountController implements ApplicationListener<ApplicationRea
         // Verdi av total
         Gauge.builder("account_count", theBank,
                 b -> b.values().size()).register(meterRegistry);
-
-        // Denne meter-typen "Gauge" rapporterer hvor mye penger som totalt finnes i banken
-        Gauge.builder("bank_sum", theBank,
-                        b -> b.values()
-                                .stream()
-                                .map(Account::getBalance)
-                                .mapToDouble(BigDecimal::doubleValue)
-                                .sum())
-                .register(meterRegistry);
     }
 
     @ResponseStatus(code = HttpStatus.NOT_FOUND, reason = "account not found")
