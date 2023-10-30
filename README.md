@@ -228,7 +228,7 @@ resource "aws_sns_topic_subscription" "user_updates_sqs_target" {
 * Namespace er typisk studentnavnet ditt. Det er den samme verdien som du endret i MetricsConfig.java filen.
 * Det finnes en lang rekke ```comparison_operator``` alternativer å velge mellom!
 * ```evaluation_periods``` og ``period`` jobber sammen for å unngå at alarmen går av ved en kortvarige "spikes" eller uteliggende observasjoner.
-* ```statistic``` er en operasjon som utføres på alle verdier i ett tidsintervall gitt av ```period``` - for en ```Gauge``` metric, i dette tilfelle her er det Maximum som gir mening
+* ```statistic``` er en operasjon som utføres på alle verdier i ett tidsintervall gitt av ```period``` - for en ```Gauge``` metric, i dette tilfelle her velger vi Maximum.
 * Legg merke til hvordan en ```resource``` refererer til en annen i Terraform!
 * Terraform lager både en SNS Topic og en email subscription.
 
