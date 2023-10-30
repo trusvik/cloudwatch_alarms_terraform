@@ -194,7 +194,7 @@ at vi ikke må gjøre git add/commit/push osv for å få oppdatert koden.
 I denne mappen, lag en ny terraform fil, med navn main.tf 
 
 ```hcl
-resource "aws_cloudwatch_metric_alarm" "zerosum" {
+resource "aws_cloudwatch_metric_alarm" "threshold" {
   alarm_name  = "${var.prefix}-threshold-alarm"
   namespace   = "grb"
   metric_name = "bank_sum.value"
