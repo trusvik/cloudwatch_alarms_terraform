@@ -254,7 +254,8 @@ output "alarm_arn" {
 }
 ```
 
-Du ka nå endre main.tf, under /infra katalogen til å inkludere modulen din. Den vil da se slik ut    
+
+Du kan nå endre main.tf, under /infra katalogen til å inkludere modulen din. Den vil da se slik ut    
 
 ```
 resource "aws_cloudwatch_dashboard" "main" {
@@ -293,20 +294,39 @@ module "alarm" {
 }
 ```
 
+Til sist må du endre variables.tf i infr/ mappen, og legge til variabelen 
+
+```shell
+variable "alarm_email" {
+  type = string
+}
+```
+
+Fordi vi ikke ønsker å hardkode epost, eller noen konkrete verdier i Terraformkoden vår
+
+### Forsøk å kjøre Terraformkoden fra Cloud9
+
+Gå til infra mappen. Kjør 
+
+```shell
+terraform init
+terraform apply
+```
+
 ### Bekreft Epost
 
 For at SNS skal få lov til å sende deg epost, må du bekrefte epost-addressen din. Du vil få en e-post med en lenke du må klikke på første gangen 
-du kjører ```terraform apply``` første gang  koden
+du kjører ```terraform apply``` første gang.
 
 ![Alt text](img/sns.png  "a title")
 
-### Test alarmen/epost manuelt ved hjelp av SNS
+### Test alarmen og sending av epost manuelt ved hjelp av SNS
 
 * Gå til AWS console
 * Gå til SNS
 * Fra venstremenyen velg "Topics"
 * Finn din egen Topic 
-* Under Subscriptions, finn epost-linjen, og velg "Request Confirmation" - sjekk eposten din, du skal ha fått en epost med en bekreftelseslenke.
+* (Dette er ikke alltid nødvendig) Under Subscriptions, finn epost-linjen, og velg "Request Confirmation" - sjekk eposten din, du skal ha fått en epost med en bekreftelseslenke.
 * Test å sende en mail, ved å trykke "Publish message" øverst til høyre på siden 
 
 ### Løs ut alarmen! 
@@ -323,7 +343,7 @@ curl --location --request POST 'http://localhost:8080/account' \
 }'|jq
 ```
 
-* Sjekk at alarmen går 
+* Sjekk at alarmen går ved å se at du har fått en epost
 * Gå til CloudWatch Alarms i AWS og se at alarmen sin tilstand er ```IN_ALARM```
 * Få balansen i banken tilbake til 0, for eksempel ved å lage en konto med negativ saldo 
 * Se at alarmen sin tilstand går vekk fra ```IN_ALARM``` . 
