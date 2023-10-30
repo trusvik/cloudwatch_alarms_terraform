@@ -175,67 +175,133 @@ Hint: du må endre på X/Y verdiene for at de ikke skal overlappe!
 
 ## Cloudwatch Alarm
 
-Vi vil lage en Alarm som utløses dersom banken sin totale sum overstiger 0. 
-Dette kan vi gjøre ved å lage en CloudWatch alarm.
+Vi vil lage en Alarm som utløses dersom banken sin totale sum overstiger et gitt beløp. 
 
-Hvis noe skal skje når en alarm løses ut, kan vi få den til å sende en melding til en SNS topic.
-Vi kan så lage en "subscription" på denne Topicen som får meldinger som sendes til den. 
+Dette kan vi gjøre ved å bruke CloudWatch. Vi skal også lage en modul for denne alarmen, så andre 
+også kan dra nytte av den.
 
-Lag en ny terraform fil i samme katalog som de andre med følgende innhold. 
+Vi skal også bruke tjenesten SNS. Simple notification Service. Ved å sende en melding en melding til en SNS topic 
+når alarmen løses ut, så kan vi reagere på en slik melding, og for eksempel sende en epost, kjøre en
+lambdafunksjon osv.
 
-*Husk å endre på e-postaddressen* til din egen! 
+## Lag Terraform modul
 
-Du kan kalle filen hva du vil, Husk at terraform prosesserer alle ```*.tf``` filer i katalogen du starter i - uavhengig av filnavn
+Vi skal nå lage en terraform modul som, mens vi jobber med modulen, er det smart å ha den på et lokalt filsystem slik
+at vi ikke må gjøre git add/commit/push osv for å få oppdatert modulkoden vår. 
+
+### lag en ny mappe under infra/ som henter alarm_module
+
+I denne mappen, lag en ny terraform fil, med navn main.tf 
 
 ```hcl
-
 resource "aws_cloudwatch_metric_alarm" "zerosum" {
-  alarm_name                = "bank-sum-must-be-0"
-  namespace                 = "glennbech"
-  metric_name               = "bank_sum.value"
+  alarm_name  = "${var.prefix}-bank-sum-must-be-0"
+  namespace   = "grb"
+  metric_name = "bank_sum.value"
 
-  comparison_operator       = "GreaterThanThreshold"
-  threshold                 = "0"
-  evaluation_periods        = "2"
-  period                    = "60"
+  comparison_operator = "GreaterThanThreshold"
+  threshold           = var.threshold
+  evaluation_periods  = "2"
+  period              = "60"
+  statistic           = "Maximum"
 
-  statistic                 = "Maximum"
-
-  alarm_description         = "This alarm goes off as soon as the total amount of money in the bank exceeds 0 "
-  insufficient_data_actions = []
-  alarm_actions       = [aws_sns_topic.user_updates.arn]
+  alarm_description = "This alarm goes off as soon as the total amount of money in the bank exceeds an amount "
+  alarm_actions     = [aws_sns_topic.user_updates.arn]
 }
 
 resource "aws_sns_topic" "user_updates" {
-  name = var.student_name
+  name = "${var.prefix}-alarm-topic"
 }
 
 resource "aws_sns_topic_subscription" "user_updates_sqs_target" {
   topic_arn = aws_sns_topic.user_updates.arn
   protocol  = "email"
-  endpoint  = "glenn.bech@gmail.com"
+  endpoint  = var.alarm_email
 }
 
 ```
 
-### Litt forklaring 
+Lag en ny fil i samme mappe , ```variables.tf``` 
 
-* Namespace er studentnavnet ditt, skal ikke være glennbech! Det finner du igjen i CloudWatch Metrics
+```shell
+variable "threshold" {
+  default = "50"
+  type = string
+}
+
+variable "alarm_email" {
+  type = string
+}
+
+variable "prefix" {
+  type = string
+}
+```
+
+Leg en ny fil i samme mappe, ```outputs.tf``` 
+
+```hcl
+output "alarm_arn" {
+  value = aws_sns_topic.user_updates.arn
+}
+```
+
+Du ka nå endre main.tf, under /infra katalogen til å inkludere modulen din. Den vil da se slik ut    
+
+```
+resource "aws_cloudwatch_dashboard" "main" {
+  dashboard_name = var.student_name
+  dashboard_body = <<DASHBOARD
+{
+  "widgets": [
+    {
+      "type": "metric",
+      "x": 0,
+      "y": 0,
+      "width": 12,
+      "height": 6,
+      "properties": {
+        "metrics": [
+          [
+            "${var.student_name}",
+            "account_count.value"
+          ]
+        ],
+        "period": 300,
+        "stat": "Maximum",
+        "region": "eu-west-1",
+        "title": "Total number of accounts"
+      }
+    }
+  ]
+}
+DASHBOARD
+}
+
+module "alarm" {
+  source = "./alarm_module"
+  student_name = var.student_name
+  alarm_email = "glenn.bech@gmail.com"
+}
+```
+
+### Litt forklaring til  aws_cloudwatch_metric_alarm ressursen
+
+* Namespace er studentnavnet ditt, skal ikke være <studentnavn>! Det finner du igjen i CloudWatch Metrics
 * Det finnes en lang rekke ```comparison_operator``` alternativer
 * ```evaluation_periods``` og ``period`` jobber sammen for å unngå at alarmen går av ved en kortvarige "spikes" eller uteliggende observasjoner. 
 * ```statistic``` er en operasjon som utføres på alle verdier i ett tidsintervall gitt av ```period``` - for en ```Gauge``` metric, i dette tilfelle her er det Maximum som gir mening  
 * Legg merke til hvordan en ```resource``` refererer til en annen i Terraform!
 * Terraform lager både en SNS Topic og en email subscription. 
 
-### TODO 
-
-Kan du bytte ut namespace-verdien med variabelen student_name? 
-
 ### Bekreft Epost
 
-For at SNS skal få lov til å sende deg epost, må du bekrefte epost-addressen din.
+For at SNS skal få lov til å sende deg epost, må du bekrefte epost-addressen din. Du vil få en e-post med en lenke du må klikke på første gangen 
+du kjører ```terraform apply``` første gang  koden
 
 ![Alt text](img/sns.png  "a title")
+
+### Test alarmen/epost manuelt ved hjelp av SNS
 
 * Gå til AWS console
 * Gå til SNS
@@ -244,10 +310,9 @@ For at SNS skal få lov til å sende deg epost, må du bekrefte epost-addressen 
 * Under Subscriptions, finn epost-linjen, og velg "Request Confirmation" - sjekk eposten din, du skal ha fått en epost med en bekreftelseslenke.
 * Test å sende en mail, ved å trykke "Publish message" øverst til høyre på siden 
 
-
 ### Løs ut alarmen! 
 
-* Forsøk å endre en konto sin saldo uten å gjøre en overføring, dette vil gi en balanse i banken sin totale saldo ulik 0!
+* Forsøk å lage nye kontoer, eller en ny konto, slik at bankens totale sum overstiger 1 MNOK. 
 
 For eksmpel ;
 ```sh
@@ -255,13 +320,13 @@ curl --location --request POST 'http://localhost:8080/account' \
 --header 'Content-Type: application/json' \
 --data-raw '{
     "id": 999,
-    "balance" : "50000"
+    "balance" : "5000000"
 }'|jq
 ```
 
 * Sjekk at alarmen går 
 * Gå til CloudWatch Alarms i AWS og se at alarmen sin tilstand er ```IN_ALARM```
-* Få balansen i banken tilbake til 0 
+* Få balansen i banken tilbake til 0, for eksempel ved å lage en konto med negativ saldo 
 * Se at alarmen sin tilstand går vekk fra ```IN_ALARM``` . 
 
 ## GitHub actions Workflow for å kjøre Terraform. 
@@ -272,7 +337,7 @@ for Terraform-koden i dette repositoryet slik at
 * Hver commit på main branch kjører Terraform-apply
 * For en Pull request, gjør bare Terraform plan 
 
-Du trenger ikke lage en Pipeline for Java applikasjonen, kun for Terraform!
+Du trenger ikke lage en Pipeline for Java applikasjonen, kun for Terraform i denne laben
 
 ## Rydd opp etter deg plz
 
