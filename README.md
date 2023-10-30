@@ -187,7 +187,7 @@ lambdafunksjon osv.
 ## Lag Terraform modul
 
 Vi skal nå lage en terraform modul. Mens vi jobber med den, er det smart å ha den på et lokalt filsystem slik
-at vi ikke må gjøre git add/commit/push osv for å få oppdatert modulkoden vår. 
+at vi ikke må gjøre git add/commit/push osv for å få oppdatert koden.
 
 ### lag en ny mappe under infra/ som henter alarm_module
 
