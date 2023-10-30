@@ -88,7 +88,7 @@ Du må endre på klassen *MetricsConfig* og bruke ditt egent studentnavn istedet
     };
 ````
 
-Installer maven i Cloud 9. Vi skal forsøke å kjøre Spring Boot applikasjonen fra Maven i terminalen
+Installer maven / jq i Cloud 9. Vi skal forsøke å kjøre Spring Boot applikasjonen fra Maven i terminalen
 
 ```
 sudo wget http://repos.fedorapeople.org/repos/dchen/apache-maven/epel-apache-maven.repo -O /etc/yum.repos.d/epel-apache-maven.repo
@@ -99,7 +99,7 @@ sudo yum install jq
 
 ## Start Spring Boot applikasjonen 
 
-Start applikasjonen med Cloud 9'
+Start applikasjonen med Cloud 9
 ```
 mvn spring-boot:run
 ```
@@ -150,12 +150,8 @@ Det skal se omtrent slik ut
 
 # Gauge for banken sin totale sum
 
-Under normale forhold skal denne summen være 0. Når penger går inn på en konto, skal de også gå ut av en annen!
-Banken må kunne bevise at summen hele tiden er 0, og vi vil derfor lage en metric for dette i koden
-
 Du skal nå lage en Micrometer ```Gauge``` som viser nettobeholdningen til banken. 
-
-TODO: Plasser denne på riktig sted i koden. 
+Plasser denne på riktig sted i koden. 
 
 ```java
 // Denne meter-typen "Gauge" rapporterer hvor mye penger som totalt finnes i banken
