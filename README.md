@@ -195,8 +195,8 @@ I denne mappen, lag en ny terraform fil, med navn main.tf
 
 ```hcl
 resource "aws_cloudwatch_metric_alarm" "threshold" {
-  alarm_name  = "${var.prefix}-threshold-alarm"
-  namespace   = "grb"
+  alarm_name  = "${var.prefix}-threshold"
+  namespace   = var.prefix
   metric_name = "bank_sum.value"
 
   comparison_operator = "GreaterThanThreshold"
@@ -219,7 +219,19 @@ resource "aws_sns_topic_subscription" "user_updates_sqs_target" {
   endpoint  = var.alarm_email
 }
 
+
+
 ```
+
+### Litt forklaring til  aws_cloudwatch_metric_alarm ressursen
+
+* Namespace er typisk studentnavnet ditt. Det er den samme verdien som du endret i MetricsConfig.java filen.
+* Det finnes en lang rekke ```comparison_operator``` alternativer å velge mellom!
+* ```evaluation_periods``` og ``period`` jobber sammen for å unngå at alarmen går av ved en kortvarige "spikes" eller uteliggende observasjoner.
+* ```statistic``` er en operasjon som utføres på alle verdier i ett tidsintervall gitt av ```period``` - for en ```Gauge``` metric, i dette tilfelle her er det Maximum som gir mening
+* Legg merke til hvordan en ```resource``` refererer til en annen i Terraform!
+* Terraform lager både en SNS Topic og en email subscription.
+
 
 Lag en ny fil i samme mappe , ```variables.tf``` 
 
@@ -280,19 +292,10 @@ DASHBOARD
 
 module "alarm" {
   source = "./alarm_module"
-  student_name = var.student_name
-  alarm_email = "glenn.bech@gmail.com"
+  alarm_email = var.alarm_email
+  prefix = var.student_name
 }
 ```
-
-### Litt forklaring til  aws_cloudwatch_metric_alarm ressursen
-
-* Namespace er studentnavnet ditt, skal ikke være <studentnavn>! Det finner du igjen i CloudWatch Metrics
-* Det finnes en lang rekke ```comparison_operator``` alternativer
-* ```evaluation_periods``` og ``period`` jobber sammen for å unngå at alarmen går av ved en kortvarige "spikes" eller uteliggende observasjoner. 
-* ```statistic``` er en operasjon som utføres på alle verdier i ett tidsintervall gitt av ```period``` - for en ```Gauge``` metric, i dette tilfelle her er det Maximum som gir mening  
-* Legg merke til hvordan en ```resource``` refererer til en annen i Terraform!
-* Terraform lager både en SNS Topic og en email subscription. 
 
 ### Bekreft Epost
 
