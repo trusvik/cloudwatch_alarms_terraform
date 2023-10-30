@@ -195,7 +195,7 @@ I denne mappen, lag en ny terraform fil, med navn main.tf
 
 ```hcl
 resource "aws_cloudwatch_metric_alarm" "zerosum" {
-  alarm_name  = "${var.prefix}-bank-sum-must-be-0"
+  alarm_name  = "${var.prefix}-threshold-alarm"
   namespace   = "grb"
   metric_name = "bank_sum.value"
 
