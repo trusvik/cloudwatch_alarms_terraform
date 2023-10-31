@@ -304,7 +304,7 @@ variable "alarm_email" {
 
 Fordi vi ikke ønsker å hardkode epost, eller noen konkrete verdier i Terraformkoden vår
 
-### Forsøk å kjøre Terraformkoden fra Cloud9
+### Kjør Terraformkoden fra Cloud9
 
 Gå til infra mappen. Kjør 
 
@@ -312,6 +312,10 @@ Gå til infra mappen. Kjør
 terraform init
 terraform apply
 ```
+
+Legg merke til at Terraform spør deg om verdier for variabler som ikke har default verdier. Dette vil ikke fungere når vi skal la GitHub Actions kjøre terraform for oss. 
+Husker du hvordan du kan gi disse argumentene på kommandolinjen? 
+Du kan også lage defaultverdier for variablene om du ønsker det - så lenge du skjønner hvordan dette fungerer. 
 
 ### Bekreft Epost
 
@@ -358,21 +362,15 @@ for Terraform-koden i dette repositoryet slik at
 
 Du trenger ikke lage en Pipeline for Java applikasjonen, kun for Terraform i denne laben
 
-## Rydd opp etter deg plz
-
-Kjør ```Terraform destroy``` fra Cloud 9, eller lag en "cleanup.yml" workflow 
-
-
 ## Ekstrapppgaver
 
 * Legg til nye Metrics i koden og Widgets i Dashboardet ditt
 * Kan du lage en eller flere nye alarmer? Eksempel; En alarm trigges av antall requests over en tidsperiode går over en terskelverdi? Sett verdien lavt så du klarer å teste :) 
-* Kan du lage et nytt endepunkt med ny funksjonalitet? 
+* Kan du lage en ny Controller metode med ny funksjonalitet i Javakoden ? 
 * Bruk gjerne følgende guide som inspirasjon https://www.baeldung.com/micrometer
 * Referanseimplementasjon; https://micrometer.io/docs/concepts
 
 Nyttig informasjon; 
 
-- https://spring.io/blog/2018/03/16/micrometer-spring-boot-2-s-new-application-metrics-collector
+- https://spring.io/guides/tutorials/metrics-and-tracing/
 - https://docs.spring.io/spring-boot/docs/current/reference/htmlsingle/#production-ready-metrics
-- 
