@@ -12,7 +12,7 @@ Logg på Cloud 9 miljøet ditt som vanlig
 
 ## Bruk Terraform til å lage et CloudWatch DashBoard 
 
-* Lag en Fork av dette repoet til Cloud9 miljøet ditt. Se i katalogen "infra" - her finner dere filen *dashboard.tf* som inneholder Terraformkode for et CloudWatch Dashboard.
+* Lag en Fork av dette repoet til Cloud9 miljøet ditt. Se i katalogen "infra" - her finner dere filen *main.tf* som inneholder Terraformkode for et CloudWatch Dashboard.
 * Du trenger å lage en fork, i din egen GitHub Konto, fordi du skal lage egne repository secrets osv når du skal lage en GitHub Actions workflow senere. 
 * Git Clone  din *egen fork* inn i Cloud9 miljøet ditt
 * Som dere ser beskrives dashboardet i et JSON-format. Her finner dere dokumentasjon https://docs.aws.amazon.com/AmazonCloudWatch/latest/APIReference/CloudWatch-Dashboard-Body-Structure.html
