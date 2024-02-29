@@ -362,7 +362,7 @@ for Terraform-koden i dette repositoryet slik at
 
 Du trenger ikke lage en Pipeline for Java applikasjonen, kun for Terraform i denne laben
 
-## Ekstrapppgaver
+## Ekstraopppgaver
 
 * Legg til nye Metrics i koden og Widgets i Dashboardet ditt
 * Kan du lage en eller flere nye alarmer? Eksempel; En alarm trigges av antall requests over en tidsperiode går over en terskelverdi? Sett verdien lavt så du klarer å teste :) 
