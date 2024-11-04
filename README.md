@@ -244,6 +244,10 @@ variable "alarm_email" {
 variable "prefix" {
   type = string
 }
+
+variable "alarm_email" {
+  type = string
+}
 ```
 
 Leg en ny fil i samme mappe, ```outputs.tf``` 
@@ -290,19 +294,9 @@ DASHBOARD
 module "alarm" {
   source = "./alarm_module"
   alarm_email = var.alarm_email
-  prefix = var.student_name
+  prefix = var.student_name 
 }
 ```
-
-Til sist må du endre variables.tf i infr/ mappen, og legge til variabelen 
-
-```shell
-variable "alarm_email" {
-  type = string
-}
-```
-
-Fordi vi ikke ønsker å hardkode epost, eller noen konkrete verdier i Terraformkoden vår
 
 ### Kjør Terraformkoden fra Cloud9
 
@@ -314,8 +308,9 @@ terraform apply
 ```
 
 Legg merke til at Terraform spør deg om verdier for variabler som ikke har default verdier. Dette vil ikke fungere når vi skal la GitHub Actions kjøre terraform for oss. 
-Husker du hvordan du kan gi disse argumentene på kommandolinjen? 
-Du kan også lage defaultverdier for variablene om du ønsker det - så lenge du skjønner hvordan dette fungerer. 
+
+* Husker du hvordan du kan gi disse argumentene på kommandolinjen? 
+* Du kan også lage defaultverdier for variablene om du ønsker det - så lenge du skjønner hvordan dette fungerer. 
 
 ### Bekreft Epost
 
