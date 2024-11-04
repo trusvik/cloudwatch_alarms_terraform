@@ -10,6 +10,19 @@ I denne øvingen skal dere bli kjent med hvordan man instrumenterer en Spring Bo
 
 Logg på Cloud 9 miljøet ditt som vanlig 
 
+## Installer Terraform, eller ennå bedre TFENV 
+
+Installer terraform 
+
+```
+wget https://releases.hashicorp.com/terraform/1.9.0/terraform_1.9.0_linux_amd64.zip
+unzip terraform_1.9.0_linux_amd64.zip
+sudo mv terraform /usr/local/bin/
+terraform -v
+```
+
+
+
 ## Bruk Terraform til å lage et CloudWatch DashBoard 
 
 * Lag en Fork av dette repoet til Cloud9 miljøet ditt. Se i katalogen "infra" - her finner dere filen *main.tf* som inneholder Terraformkode for et CloudWatch Dashboard.
