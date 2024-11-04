@@ -21,12 +21,12 @@ sudo mv terraform /usr/local/bin/
 terraform -v
 ```
 
-
+Hvis du vil teste ut TFENV som støtter installasjon og bruk av mange Terraformversjoner kan du gå til en tidligere
+lab og se hvordan det gjøres https://github.com/glennbechdevops/terraform-cloudwatch-dashboard?tab=readme-ov-file#terraform-pro-tip
 
 ## Bruk Terraform til å lage et CloudWatch DashBoard 
 
 * Lag en Fork av dette repoet til Cloud9 miljøet ditt. Se i katalogen "infra" - her finner dere filen *main.tf* som inneholder Terraformkode for et CloudWatch Dashboard.
-* Du trenger å lage en fork, i din egen GitHub Konto, fordi du skal lage egne repository secrets osv når du skal lage en GitHub Actions workflow senere. 
 * Git Clone  din *egen fork* inn i Cloud9 miljøet ditt
 
 ### Se på infrastrukturkoden i infra/main.tf
@@ -125,7 +125,7 @@ Koden i dette repoet eksponerer et REST grensesnitt på http://localhost:8080/ac
 
 ## Kall APIet fra en terminal I Cloud 9 
 
-* Opprette konto, eller dette saldo
+* Opprette konto, eller sette saldo
 
 ```sh
 curl --location --request POST 'http://localhost:8080/account' \
@@ -168,7 +168,7 @@ Det skal se omtrent slik ut
 # Gauge for banken sin totale sum
 
 Du skal nå lage en Micrometer ```Gauge``` som viser nettobeholdningen til banken. 
-Plasser denne på riktig sted i koden. 
+**Oppgave** Finn riktig plass for denne i koden. 
 
 ```java
 // Denne meter-typen "Gauge" rapporterer hvor mye penger som totalt finnes i banken
@@ -190,8 +190,8 @@ Hint: du må endre på X/Y verdiene for at de ikke skal overlappe!
 
 Vi vil lage en Alarm som utløses dersom banken sin totale sum overstiger et gitt beløp. 
 
-Dette kan vi gjøre ved å bruke CloudWatch. Vi skal også lage en modul for denne alarmen, så andre 
-også kan dra nytte av den.
+Dette kan vi gjøre ved å bruke CloudWatch. Vi skal også lage en modul for denne alarmen, så andre potensielt 
+også kan dra nytte av den, eller for å gjøre det enkelt å lage flere alarmer. 
 
 Vi skal også bruke tjenesten SNS. Simple notification Service. Ved å sende en melding en melding til en SNS topic 
 når alarmen løses ut, så kan vi reagere på en slik melding, og for eksempel sende en epost, kjøre en
@@ -239,14 +239,14 @@ resource "aws_sns_topic_subscription" "user_updates_sqs_target" {
 ### Litt forklaring til  aws_cloudwatch_metric_alarm ressursen
 
 * Namespace er typisk studentnavnet ditt. Det er den samme verdien som du endret i MetricsConfig.java filen.
-* Det finnes en lang rekke ```comparison_operator``` alternativer å velge mellom!
+* Det finnes en lang rekke ```comparison_operator``` alternativer å velge mellom, vi bruker "GreaterThanThreshold"
 * ```evaluation_periods``` og ``period`` jobber sammen for å unngå at alarmen går av ved en kortvarige "spikes" eller uteliggende observasjoner.
 * ```statistic``` er en operasjon som utføres på alle verdier i ett tidsintervall gitt av ```period``` - for en ```Gauge``` metric, i dette tilfelle her velger vi Maximum.
 * Legg merke til hvordan en ```resource``` refererer til en annen i Terraform!
 * Terraform lager både en SNS Topic og en email subscription.
 
 
-Lag en ny fil i samme mappe , ```variables.tf``` 
+Lag en ny fil i  mappen infra/alarm_module , ```variables.tf``` 
 
 ```shell
 variable "threshold" {
@@ -262,19 +262,18 @@ variable "prefix" {
   type = string
 }
 
-variable "alarm_email" {
-  type = string
-}
 ```
 
-Leg en ny fil i samme mappe, ```outputs.tf``` 
+Lag en ny fil i samme mappe, ```outputs.tf``` 
 
 ```hcl
 output "alarm_arn" {
   value = aws_sns_topic.user_updates.arn
 }
 ```
+Gratululerer!! Du har nå laget en Terraform  modul!
 
+## Bruk modulen
 
 Du kan nå endre main.tf, under /infra katalogen til å inkludere modulen din. Den vil da se slik ut    
 
@@ -328,7 +327,7 @@ Legg merke til at Terraform spør deg om verdier for variabler som ikke har defa
 
 * Husker du hvordan du kan gi disse argumentene på kommandolinjen? 
 * Du kan også lage defaultverdier for variablene om du ønsker det - så lenge du skjønner hvordan dette fungerer. 
-
+ 
 ### Bekreft Epost
 
 For at SNS skal få lov til å sende deg epost, må du bekrefte epost-addressen din. Du vil få en e-post med en lenke du må klikke på første gangen 
@@ -372,8 +371,6 @@ for Terraform-koden i dette repositoryet slik at
 * Hver commit på main branch kjører Terraform-apply
 * For en Pull request, gjør bare Terraform plan 
 
-Du trenger ikke lage en Pipeline for Java applikasjonen, kun for Terraform i denne laben
-
 ## Ekstraopppgaver
 
 * Legg til nye Metrics i koden og Widgets i Dashboardet ditt
@@ -382,7 +379,7 @@ Du trenger ikke lage en Pipeline for Java applikasjonen, kun for Terraform i den
 * Bruk gjerne følgende guide som inspirasjon https://www.baeldung.com/micrometer
 * Referanseimplementasjon; https://micrometer.io/docs/concepts
 
-## Ekstraoppgaver 2
+## Ekstraoppgave 2 
 
 * Lag en container av Java applikasjon og bygg den og push til ECR via GitHub Actions
 * Lag terraformkode for en Apprunner servie for aplkasjonen
