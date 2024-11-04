@@ -15,6 +15,9 @@ Logg på Cloud 9 miljøet ditt som vanlig
 * Lag en Fork av dette repoet til Cloud9 miljøet ditt. Se i katalogen "infra" - her finner dere filen *main.tf* som inneholder Terraformkode for et CloudWatch Dashboard.
 * Du trenger å lage en fork, i din egen GitHub Konto, fordi du skal lage egne repository secrets osv når du skal lage en GitHub Actions workflow senere. 
 * Git Clone  din *egen fork* inn i Cloud9 miljøet ditt
+
+### Se på infrastrukturkoden i infra/main.tf
+  
 * Som dere ser beskrives dashboardet i et JSON-format. Her finner dere dokumentasjon https://docs.aws.amazon.com/AmazonCloudWatch/latest/APIReference/CloudWatch-Dashboard-Body-Structure.html
 * Her ser dere også hvordan man ofte inkluderer tekst eller kode ved hjelp av  "Heredoc" syntaks i Terraformkode, slik at vi ikke trenger å tenke på "newline", "Escaping" av spesialtegn osv (https://developer.hashicorp.com/terraform/language/expressions/strings)
 
@@ -48,11 +51,12 @@ resource "aws_cloudwatch_dashboard" "main" {
 THEREBEDRAGONS
 }
 ```
-## TODO 
+## Oppgave 1 
 
-* Skriv en *provider.tf* i samme katalog som main.tf - og kjør terraform init / plan / apply fra Cloud 9 miljøet ditt
-* Se gjerne på https://github.com/glennbechdevops/terraform-app-runner - for inspirasjon
-* Se at det blir opprettet et Dashboard
+* Skriv en *provider.tf* i samme katalog som main.tf
+* Se gjerne på [https://github.com/glennbechdevops/terraform-app-runner ](https://github.com/glennbechdevops/terraform-state) - for inspirasjon
+* Kjør terraform init / plan / apply fra Cloud 9 miljøet ditt
+* Gå til tjenesten CloudWatch og se at det blir opprettet et Dashboard
 
 ### Variabler i Terraform 
 
@@ -72,7 +76,7 @@ THEREBEDRAGONS
                 b -> b.values().size()).register(meterRegistry);
     }
 ```
-Denne lager en Ny metric - av typen Gauge. Hver gang data sendes til CloudWatch leses denne av og vil rapportere hvor mange bank-kontoer som eksisterer i systemet 
+Denne lager en Ny metric - av typen Gauge. Hver gang din applikasjon sender data til CloudWatch - sendes denne verdien - hvor mange bank-kontoer som eksisterer i systemet 
 
 ## Endre MetricConfig klasse
 
@@ -81,7 +85,7 @@ Du må endre på klassen *MetricsConfig* og bruke ditt egent studentnavn istedet
 ````java
  return new CloudWatchConfig() {
         private Map<String, String> configuration = Map.of(
-                "cloudwatch.namespace", "glennbech",
+                "cloudwatch.namespace", "<studentnavn>",
                 "cloudwatch.step", Duration.ofSeconds(5).toString());
         
         ....
