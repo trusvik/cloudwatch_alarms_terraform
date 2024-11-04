@@ -67,6 +67,7 @@ THEREBEDRAGONS
 ## Oppgave 1 
 
 * Skriv en *provider.tf* i samme katalog som main.tf
+* For å gjøre senere oppgaver enklere, så lag en S3 backend for state filen. 
 * Se gjerne på [https://github.com/glennbechdevops/terraform-app-runner ](https://github.com/glennbechdevops/terraform-state) - for inspirasjon
 * Kjør terraform init / plan / apply fra Cloud 9 miljøet ditt
 * Gå til tjenesten CloudWatch og se at det blir opprettet et Dashboard
@@ -275,7 +276,8 @@ Gratululerer!! Du har nå laget en Terraform  modul!
 
 ## Bruk modulen
 
-Du kan nå endre main.tf, under /infra katalogen til å inkludere modulen din. Den vil da se slik ut    
+Du kan nå endre main.tf, under /infra katalogen til å inkludere modulen din. Den vil da se slik ut.
+Husk å sette inn din egen epost i koden. 
 
 ```
 resource "aws_cloudwatch_dashboard" "main" {
@@ -309,10 +311,13 @@ DASHBOARD
 
 module "alarm" {
   source = "./alarm_module"
-  alarm_email = var.alarm_email
+  alarm_email = "<din_epost@kristiania.no>
   prefix = var.student_name 
 }
 ```
+
+***Oppgave*** - Lag en ny variabel i infra/variables.tf som heter `alarm_email` bruk denne i modul-blokken så du ikke trenger å putte inn din egen epost. 
+
 
 ### Kjør Terraformkoden fra Cloud9
 
@@ -369,7 +374,8 @@ Basert på for eksempel denne labben https://github.com/glennbechdevops/terrafor
 for Terraform-koden i dette repositoryet slik at 
 
 * Hver commit på main branch kjører Terraform-apply
-* For en Pull request, gjør bare Terraform plan 
+* For en Pull request, gjør bare Terraform plan
+  
 
 ## Ekstraopppgaver
 
