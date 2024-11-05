@@ -1,0 +1,29 @@
+name: GitHub Actions Demo
+run-name: ${{ github.actor }} is testing out GitHub Actions
+
+on: 
+  push: main
+  workflow_dispatch:
+
+jobs:
+  Amazon-test:
+    runs-on: ubuntu-latest
+    steps:
+    # Checkout the repository (this is needed to work within the repo context)
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    # Install AWS CLI (optional if it's already installed in the image)
+    - name: Install AWS CLI
+      run: sudo apt-get update && sudo apt-get install -y awscli
+
+    # Configure AWS credentials (using GitHub Secrets)
+    - name: Configure AWS Credentials
+      uses: aws-actions/configure-aws-credentials@v2
+      with:
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws-region: us-west-1 
+
+    - name: List S3 Buckets
+      run: aws s3 ls
